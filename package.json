@@ -1,0 +1,28 @@
+{
+  "name": "tesseract-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kennethpHN/tesseract-backend.git"
+  },
+  "keywords": [
+    "Javascript",
+    "Node.JS",
+    "SQLite"
+  ],
+  "author": "kennethpHN",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kennethpHN/tesseract-backend/issues"
+  },
+  "homepage": "https://github.com/kennethpHN/tesseract-backend#readme",
+  "dependencies": {
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.2"
+  }
+}
