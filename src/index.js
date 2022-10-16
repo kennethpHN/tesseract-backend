@@ -6,11 +6,12 @@
 
 const express = require('express');
 const { initDB } = require('./db/db_index');
+const { TodosReqHandler } = require('./handlers/todos');
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
+app.use(TodosReqHandler);
 app.get("/status",(req, res)=>{
     res.send({status: "OK"});
 });

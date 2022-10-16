@@ -5,7 +5,7 @@ const sqlite3 = require("sqlite3");
 async function getDBHandler(){ 
     try {
         const dbHandler = await open({
-            filename: "todos.db",
+            filename: "todos.sqlite",
             driver: sqlite3.Database
         });
 
@@ -26,7 +26,7 @@ async function initDB(){
     try {
         const dbHandler = await getDBHandler();
 
-        dbHandler.exec(
+        await dbHandler.exec(
             `CREATE TABLE IF NOT EXISTS todos (
                 id INTEGER PRIMARY KEY, 
                 title TEXT, 
@@ -43,7 +43,8 @@ async function initDB(){
 
 
 
-//module.exports.getDBHandler = getDBHandler;
+module.exports.getDBHandler = getDBHandler;
 module.exports.initDB = initDB;
+
 
 //console.log(module)
