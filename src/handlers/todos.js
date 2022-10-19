@@ -17,6 +17,7 @@ TodosReqHandler.post("/to-dos", async (req,res) => {
     `);
 
         await dbHandler.close();
+        
         res.send({addToDo:{title,description,is_done, ...addToDo}});
     } catch (error) {
         res.status(500).send({
@@ -66,10 +67,17 @@ TodosReqHandler.delete("/to-dos/:id", async (req,res) => {
 });
 
 
-TodosReqHandler.patch("/to-dos/", async (req,res) => {
+TodosReqHandler.patch("/to-dos/:id", async (req,res) => {
     try {
-        const {title, description, isDone: is_done, id} = req.body;
+        const toDoId = req.params.id;
+        const {title, description, isDone: is_done} = req.body;
         const dbHandler = await getDBHandler();
+
+        const selectedToDo = await dbHandler.get(
+            `SELECT * FROM todos WHERE id = ?`,
+            toDoId
+        );
+
         const updateToDo = await dbHandler.run(
             `UPDATE todos
             SET title = ?,
@@ -78,11 +86,11 @@ TodosReqHandler.patch("/to-dos/", async (req,res) => {
             
             WHERE
                 id = ?`,
-                [title,description,is_done,id]
+                [title|| selectedToDo.title , description || selectedToDo.description, is_done || selectedToDo.is_done, toDoId]
                 );
         await dbHandler.close();
         
-        res.send({updateToDo: {...updateToDo}});
+        res.send({updatedToDo: {...selectedToDo}});
 
     } catch (error) {
         res.status(500).send({
