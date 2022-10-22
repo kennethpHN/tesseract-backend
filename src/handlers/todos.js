@@ -12,7 +12,7 @@ TodosReqHandler.post("/to-dos", async (req,res) => {
         VALUES (
             '${title}',
             '${description}',
-            ${is_done}
+            0
         )
     `);
 
@@ -70,13 +70,15 @@ TodosReqHandler.delete("/to-dos/:id", async (req,res) => {
 TodosReqHandler.patch("/to-dos/:id", async (req,res) => {
     try {
         const toDoId = req.params.id;
-        const {title, description, isDone: is_done} = req.body;
+        const {title, description, is_done} = req.body;
         const dbHandler = await getDBHandler();
 
         const selectedToDo = await dbHandler.get(
             `SELECT * FROM todos WHERE id = ?`,
             toDoId
         );
+
+        let boolIsDone = is_done ? 1 : 0;
 
         const updateToDo = await dbHandler.run(
             `UPDATE todos
@@ -86,7 +88,7 @@ TodosReqHandler.patch("/to-dos/:id", async (req,res) => {
             
             WHERE
                 id = ?`,
-                [title|| selectedToDo.title , description || selectedToDo.description, is_done || selectedToDo.is_done, toDoId]
+                [title|| selectedToDo.title , description || selectedToDo.description, boolIsDone, toDoId]
                 );
         await dbHandler.close();
         
