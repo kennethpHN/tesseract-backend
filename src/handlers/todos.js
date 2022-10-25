@@ -4,21 +4,23 @@ const TodosReqHandler = express.Router();
 
 TodosReqHandler.post("/to-dos", async (req,res) => {
     try {
+        date = new Date();
         const {title, description, isDone: is_done} = req.body;
         const dbHandler = await getDBHandler();
 
         const addToDo = await dbHandler.run(`
-        INSERT INTO todos (title, description, is_done)
+        INSERT INTO todos (title, description, is_done, date)
         VALUES (
             '${title}',
             '${description}',
-            0
+            0,
+            '${date.toLocaleString('en-US', { timeZone: 'America/Tegucigalpa' })}'
         )
     `);
 
         await dbHandler.close();
         
-        res.send({addToDo:{title,description,is_done, ...addToDo}});
+        res.send({addToDo:{title,description,is_done,date, ...addToDo}});
     } catch (error) {
         res.status(500).send({
             error: `Something went wrong when trying to create a new ToDo`,
@@ -69,6 +71,7 @@ TodosReqHandler.delete("/to-dos/:id", async (req,res) => {
 
 TodosReqHandler.patch("/to-dos/:id", async (req,res) => {
     try {
+        let updatedDate = new Date();
         const toDoId = req.params.id;
         const {title, description, is_done} = req.body;
         const dbHandler = await getDBHandler();
@@ -84,11 +87,12 @@ TodosReqHandler.patch("/to-dos/:id", async (req,res) => {
             `UPDATE todos
             SET title = ?,
                 description = ?,
-                is_done = ?
+                is_done = ?,
+                date = ?
             
             WHERE
                 id = ?`,
-                [title|| selectedToDo.title , description || selectedToDo.description, boolIsDone, toDoId]
+                [title|| selectedToDo.title , description || selectedToDo.description, boolIsDone, updatedDate.toLocaleString('en-US', { timeZone: 'America/Tegucigalpa' }), toDoId]
                 );
         await dbHandler.close();
         

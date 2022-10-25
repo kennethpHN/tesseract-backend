@@ -31,7 +31,8 @@ async function initDB(){
                 id INTEGER PRIMARY KEY, 
                 title TEXT, 
                 description TEXT,
-                is_done INTEGER DEFAULT 0
+                is_done INTEGER DEFAULT 0,
+                date TEXT
             )`
         );
 
